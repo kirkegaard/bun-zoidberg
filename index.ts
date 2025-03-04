@@ -8,7 +8,7 @@ if (!token) {
 
 const endpoint = `${process.env.OLLAMA_ENDPOINT || "http://localhost:11434"}`;
 const model = `${process.env.OLLAMA_MODEL || "llama3:70b"}`;
-const prompts = process.env.DISCORD_PROMPTS?.split("|") || [];
+const prompts = process.env.PROMPTS?.split("|") || [];
 if (prompts.length === 0) {
   throw new Error("DISCORD_PROMPTS is required in environment variables");
 }
@@ -16,6 +16,7 @@ if (prompts.length === 0) {
 const getRandomPrompt = () =>
   prompts[Math.floor(Math.random() * prompts.length)];
 
+const reactionPercentage = parseFloat(process.env.REACTION_PERCENTAGE || "0.1");
 const reactions = ["👍", "🙏", "🤘"];
 
 const ollama = new Ollama({ host: endpoint });
@@ -35,7 +36,7 @@ client.on(Events.ClientReady, (readyClient) => {
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
 
-  if (Math.random() < 0.1) {
+  if (Math.random() < reactionPercentage) {
     const react = async () => {
       await message.react(
         reactions[Math.floor(Math.random() * reactions.length)],
