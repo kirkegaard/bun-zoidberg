@@ -48,7 +48,7 @@ client.on(Events.MessageCreate, async (message) => {
   const content = message.content.trim();
 
   if (content.startsWith(`<@${client.user?.id}>`)) {
-    console.log("Generating response to ", content);
+    console.log("Generating response to: ", content);
 
     await message.channel.sendTyping();
 
@@ -63,6 +63,8 @@ client.on(Events.MessageCreate, async (message) => {
       model,
       prompt: `<prompt>${getRandomPrompt()}</prompt><input>${input}</input>`,
     });
+
+    console.log("Ollama response: ", response);
 
     const cleanedResponse = response.response
       .replace(/<think>[\s\S]*?<\/think>\n*/, "")
